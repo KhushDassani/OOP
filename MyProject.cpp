@@ -1,3 +1,5 @@
+//CPP program to calculate net per day salaries of Ground Staffs.
+
 #include<iostream>
 using namespace std;
 
