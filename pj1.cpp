@@ -1,3 +1,4 @@
+#include "MyProject.cpp"
 #include<iostream>
 #include<math.h>
 #include<stdlib.h>
@@ -161,13 +162,13 @@ float airplane::busifare()
 {
 	return business_fare;
 }
-class flight
+class flight: public groundCost
 {
 	protected:
 	airplane a[3];
 	int people[3],total_people;
 	float airtime[3],parktime,hangtime,net_flying_hours;
-	float parkcost,hangarcost,navcost,perks,ground_maintainece;
+	float parkcost,hangarcost,navcost,perks;
 	float total_fuel[3],land_total[3];
 	float ecofare[3],bussfare[3],basefare[3],finalecofare[3],finalbusifare[3];
 	float tax_eco[3],tax_busi[3],gst,servicetax;
@@ -179,7 +180,6 @@ class flight
 			net_flying_hours=0;
 			hangtime=12;
 			navcost=7560.70;
-			ground_maintainece=0;
 			grossprofit=0;
 			netprofit=0;
 			revenue=0;
@@ -194,7 +194,6 @@ class flight
 		void process_nav();
 		void process_basefare();
 		void process_perks();
-		void process_groundcost();
 		void process_finalfare();
 		void process_tax();
 		void process_profit();
@@ -272,11 +271,7 @@ void flight::process_perks()
 	cin>>n;
 	perks=(n+2)*6000;
 }
-void flight::process_groundcost()
-{
-	for(int i=0;i<3;i++)
-    ground_maintainece+=0.01*basefare[i]*(a[i].eco_pas()+a[i].busi_pas());
-}
+
 void flight::process_finalfare()
 {
 	for(int i=0;i<3;i++)
@@ -306,7 +301,7 @@ void flight::process_profit()
     {
     	grossprofit+=(a[i].eco_pas())*(finalecofare[i]-ecofare[i])+(a[i].busi_pas())*(finalbusifare[i]-bussfare[i]);
 	}
-	netprofit=grossprofit-perks-ground_maintainece;
+	netprofit=grossprofit-perks-ground_maintainance;
 }
 void flight::display()
 {
@@ -336,7 +331,7 @@ void flight::display()
 	cout<<setw(40)<<"Parking time :: "<<parktime<<setw(20)<<"Parking cost:: "<<parkcost<<endl;
 	cout<<setw(40)<<"Housing time :: "<<hangtime<<setw(20)<<"Housing cost:: "<<hangarcost<<endl;
 	cout<<setw(40)<<"Cabin crew accodomation cost :: "<<perks<<endl;
-	cout<<setw(40)<<"Ground maintainence cost :: "<<ground_maintainece<<endl;
+	cout<<setw(40)<<"Ground cost :: "<<ground_maintainance<<endl;
 	cout<<setw(40)<<"Revenue generated :: "<<revenue<<endl;
 	cout<<setw(40)<<"GrossProfit :: "<<grossprofit<<endl;
 	cout<<setw(40)<<"Net profit :: "<<netprofit<<endl;
@@ -354,9 +349,9 @@ int main()
 	a1.process_nav();
 	a1.process_basefare();
 	a1.process_perks();
-	a1.process_groundcost();
     a1.process_finalfare();
     a1.process_tax();
+	a1.compute();
     a1.process_profit();
 	a1.display();
 }
